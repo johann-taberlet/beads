@@ -55,12 +55,16 @@ export interface QuizSchema {
 export interface QuizState {
   currentStep: number;
   answers: Record<string, AnswerValue>;
+  history: number[];
+  isComplete: boolean;
 }
 
 export interface QuizStore extends QuizState {
   setAnswer: (questionId: string, answer: AnswerValue) => void;
+  setStep: (step: number) => void;
   nextStep: () => void;
   previousStep: () => void;
+  finish: () => void;
   reset: () => void;
 }
 
