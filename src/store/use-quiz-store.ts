@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { QuizStore, AnswerValue } from "@/types/quiz";
+import type { AnswerValue, QuizStore } from "@/types/quiz";
 
 export const useQuizStore = create<QuizStore>((set) => ({
   currentStep: 0,
@@ -37,4 +37,3 @@ export const useQuizStore = create<QuizStore>((set) => ({
   reset: () =>
     set({ currentStep: 0, answers: {}, history: [], isComplete: false }),
 }));
-

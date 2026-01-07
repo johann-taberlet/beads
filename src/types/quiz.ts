@@ -67,4 +67,3 @@ export interface QuizStore extends QuizState {
   finish: () => void;
   reset: () => void;
 }
-
