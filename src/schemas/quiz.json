@@ -1,0 +1,230 @@
+{
+  "id": "insurance-discovery-v1",
+  "title": "Home & Business Risk Assessment",
+  "version": "1.0.0",
+  "questions": [
+    {
+      "id": "q-property-type",
+      "text": "What type of property are you insuring?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "residential",
+          "label": "Residential Home",
+          "riskScores": {
+            "Legal": 0.05
+          }
+        },
+        {
+          "id": "commercial",
+          "label": "Commercial Building",
+          "riskScores": {
+            "Fire": 0.1,
+            "Legal": 0.15
+          }
+        },
+        {
+          "id": "mixed",
+          "label": "Mixed Use",
+          "riskScores": {
+            "Fire": 0.15,
+            "Theft": 0.1
+          }
+        }
+      ]
+    },
+    {
+      "id": "q-roof-type",
+      "text": "What is your primary roof material?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "pitched",
+          "label": "Pitched Tile/Slate",
+          "riskScores": {
+            "Fire": -0.05,
+            "Natural": -0.1
+          }
+        },
+        {
+          "id": "flat",
+          "label": "Flat Bitumen",
+          "riskScores": {
+            "Natural": 0.2,
+            "Fire": 0.1
+          }
+        },
+        {
+          "id": "metal",
+          "label": "Metal",
+          "riskScores": {
+            "Fire": -0.1,
+            "Natural": 0.05
+          }
+        }
+      ]
+    },
+    {
+      "id": "q-security-system",
+      "text": "Do you have a monitored security system?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "yes-monitored",
+          "label": "Yes, professionally monitored",
+          "riskScores": {
+            "Theft": -0.3
+          }
+        },
+        {
+          "id": "yes-local",
+          "label": "Yes, local alarm only",
+          "riskScores": {
+            "Theft": -0.15
+          }
+        },
+        {
+          "id": "none",
+          "label": "No security system",
+          "riskScores": {
+            "Theft": 0.2
+          }
+        }
+      ]
+    },
+    {
+      "id": "q-high-value-items",
+      "text": "Which high-value items do you own?",
+      "description": "Select all that apply",
+      "type": "multi-select",
+      "options": [
+        {
+          "id": "jewelry",
+          "label": "Jewelry (> $5k)",
+          "riskScores": {
+            "Theft": 0.2,
+            "Legal": 0.05
+          }
+        },
+        {
+          "id": "art",
+          "label": "Fine Art",
+          "riskScores": {
+            "Theft": 0.15,
+            "Fire": 0.1
+          }
+        },
+        {
+          "id": "electronics",
+          "label": "High-end Electronics",
+          "riskScores": {
+            "Theft": 0.1
+          }
+        },
+        {
+          "id": "none",
+          "label": "None of the above"
+        }
+      ]
+    },
+    {
+      "id": "q-construction-year",
+      "text": "What year was the property built?",
+      "type": "number",
+      "placeholder": "e.g. 1985"
+    },
+    {
+      "id": "q-has-dog",
+      "text": "Do you own a dog?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes",
+          "riskScores": {
+            "Legal": 0.1
+          }
+        },
+        {
+          "id": "no",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "q-dog-breed",
+      "text": "What is the primary breed of your dog?",
+      "type": "single-choice",
+      "logic": {
+        "questionId": "q-has-dog",
+        "operator": "equals",
+        "value": "yes"
+      },
+      "options": [
+        {
+          "id": "working",
+          "label": "Working Breed (e.g. German Shepherd)",
+          "riskScores": {
+            "Legal": 0.2,
+            "Theft": -0.1
+          }
+        },
+        {
+          "id": "toy",
+          "label": "Toy Breed",
+          "riskScores": {
+            "Legal": 0.05
+          }
+        },
+        {
+          "id": "other",
+          "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "q-commercial-details",
+      "text": "What is the primary business activity?",
+      "type": "single-choice",
+      "logic": {
+        "and": [
+          {
+            "questionId": "q-property-type",
+            "operator": "equals",
+            "value": "commercial"
+          },
+          {
+            "questionId": "q-high-value-items",
+            "operator": "contains",
+            "value": "electronics"
+          }
+        ]
+      },
+      "options": [
+        {
+          "id": "office",
+          "label": "Office / Tech",
+          "riskScores": {
+            "Cyber": 0.2
+          }
+        },
+        {
+          "id": "retail",
+          "label": "Retail",
+          "riskScores": {
+            "Theft": 0.1,
+            "Cyber": 0.05
+          }
+        },
+        {
+          "id": "warehouse",
+          "label": "Warehouse",
+          "riskScores": {
+            "Fire": 0.2,
+            "Theft": 0.15
+          }
+        }
+      ]
+    }
+  ]
+}

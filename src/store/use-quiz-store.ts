@@ -2,8 +2,11 @@ import { create } from "zustand";
 
 interface QuizState {
   currentStep: number;
-  answers: Record<string, any>;
-  setAnswer: (questionId: string, answer: any) => void;
+  answers: Record<string, string | number | boolean | string[]>;
+  setAnswer: (
+    questionId: string,
+    answer: string | number | boolean | string[],
+  ) => void;
   nextStep: () => void;
   previousStep: () => void;
   reset: () => void;
