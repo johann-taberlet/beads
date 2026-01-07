@@ -52,11 +52,18 @@ export interface QuizSchema {
   questions: Question[];
 }
 
+export interface Lead {
+  name: string;
+  email: string;
+  phone: string;
+}
+
 export interface QuizState {
   currentStep: number;
   answers: Record<string, AnswerValue>;
   history: number[];
   isComplete: boolean;
+  lead: Lead | null;
 }
 
 export interface QuizStore extends QuizState {
@@ -64,6 +71,7 @@ export interface QuizStore extends QuizState {
   setStep: (step: number) => void;
   nextStep: () => void;
   previousStep: () => void;
+  setLead: (lead: Lead) => void;
   finish: () => void;
   reset: () => void;
 }
