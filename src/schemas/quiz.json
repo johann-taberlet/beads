@@ -28,8 +28,42 @@
           "label": "Mixed Use",
           "riskScores": {
             "Fire": 0.15,
-            "Theft": 0.1
+            "Theft": 0.1,
+            "Legal": 0.1
           }
+        }
+      ]
+    },
+    {
+      "id": "q-construction-year",
+      "text": "What year was the property built?",
+      "type": "number",
+      "placeholder": "e.g. 1985"
+    },
+    {
+      "id": "q-recent-renovations",
+      "text": "Have there been major renovations in the last 10 years?",
+      "description": "Focus on plumbing, electrical, or roofing.",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "yes-full",
+          "label": "Yes, full system updates",
+          "riskScores": {
+            "Fire": -0.15,
+            "Natural": -0.1
+          }
+        },
+        {
+          "id": "yes-partial",
+          "label": "Yes, partial updates",
+          "riskScores": {
+            "Fire": -0.05
+          }
+        },
+        {
+          "id": "no",
+          "label": "No major renovations"
         }
       ]
     },
@@ -65,6 +99,74 @@
       ]
     },
     {
+      "id": "q-heating-source",
+      "text": "What is the primary heating source?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "electric",
+          "label": "Electric / Heat Pump",
+          "riskScores": {
+            "Fire": -0.05
+          }
+        },
+        {
+          "id": "gas",
+          "label": "Gas Furnace",
+          "riskScores": {
+            "Fire": 0.05
+          }
+        },
+        {
+          "id": "wood",
+          "label": "Wood / Pellet Stove",
+          "riskScores": {
+            "Fire": 0.25
+          }
+        },
+        {
+          "id": "oil",
+          "label": "Heating Oil",
+          "riskScores": {
+            "Fire": 0.1,
+            "Natural": 0.05
+          }
+        }
+      ]
+    },
+    {
+      "id": "q-occupancy",
+      "text": "How is the property primarily occupied?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "owner",
+          "label": "Owner Occupied",
+          "riskScores": {
+            "Theft": -0.05,
+            "Fire": -0.05
+          }
+        },
+        {
+          "id": "tenant",
+          "label": "Tenant Occupied",
+          "riskScores": {
+            "Legal": 0.1,
+            "Theft": 0.05
+          }
+        },
+        {
+          "id": "vacation",
+          "label": "Vacation / Short-term Rental",
+          "riskScores": {
+            "Theft": 0.25,
+            "Natural": 0.1,
+            "Fire": 0.1
+          }
+        }
+      ]
+    },
+    {
       "id": "q-security-system",
       "text": "Do you have a monitored security system?",
       "type": "single-choice",
@@ -89,6 +191,31 @@
           "riskScores": {
             "Theft": 0.2
           }
+        }
+      ]
+    },
+    {
+      "id": "q-proximity-hydrant",
+      "text": "Is there a fire hydrant within 500 feet?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes",
+          "riskScores": {
+            "Fire": -0.2
+          }
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "riskScores": {
+            "Fire": 0.15
+          }
+        },
+        {
+          "id": "unsure",
+          "label": "I'm not sure"
         }
       ]
     },
@@ -122,16 +249,18 @@
           }
         },
         {
+          "id": "collections",
+          "label": "Rare Collections (Stamps, Wine, etc.)",
+          "riskScores": {
+            "Fire": 0.05,
+            "Theft": 0.1
+          }
+        },
+        {
           "id": "none",
           "label": "None of the above"
         }
       ]
-    },
-    {
-      "id": "q-construction-year",
-      "text": "What year was the property built?",
-      "type": "number",
-      "placeholder": "e.g. 1985"
     },
     {
       "id": "q-has-dog",
@@ -163,15 +292,15 @@
       "options": [
         {
           "id": "working",
-          "label": "Working Breed (e.g. German Shepherd)",
+          "label": "Working/Guard Breed (e.g. German Shepherd, Rottweiler)",
           "riskScores": {
-            "Legal": 0.2,
+            "Legal": 0.25,
             "Theft": -0.1
           }
         },
         {
           "id": "toy",
-          "label": "Toy Breed",
+          "label": "Toy / Companion Breed",
           "riskScores": {
             "Legal": 0.05
           }
@@ -179,6 +308,64 @@
         {
           "id": "other",
           "label": "Other"
+        }
+      ]
+    },
+    {
+      "id": "q-pool-trampoline",
+      "text": "Do you have a swimming pool or trampoline?",
+      "type": "multi-select",
+      "options": [
+        {
+          "id": "pool-fenced",
+          "label": "Swimming Pool (Fenced)",
+          "riskScores": {
+            "Legal": 0.15
+          }
+        },
+        {
+          "id": "pool-unfenced",
+          "label": "Swimming Pool (Unfenced)",
+          "riskScores": {
+            "Legal": 0.4
+          }
+        },
+        {
+          "id": "trampoline",
+          "label": "Trampoline",
+          "riskScores": {
+            "Legal": 0.2
+          }
+        },
+        {
+          "id": "none",
+          "label": "Neither"
+        }
+      ]
+    },
+    {
+      "id": "q-business-conducted",
+      "text": "Is any business conducted on the premises?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "yes-clients",
+          "label": "Yes, with clients visiting",
+          "riskScores": {
+            "Legal": 0.2,
+            "Cyber": 0.1
+          }
+        },
+        {
+          "id": "yes-no-clients",
+          "label": "Yes, remote work only",
+          "riskScores": {
+            "Cyber": 0.15
+          }
+        },
+        {
+          "id": "no",
+          "label": "No business activity"
         }
       ]
     },
@@ -194,9 +381,9 @@
             "value": "commercial"
           },
           {
-            "questionId": "q-high-value-items",
+            "questionId": "q-business-conducted",
             "operator": "contains",
-            "value": "electronics"
+            "value": "yes"
           }
         ]
       },
@@ -222,6 +409,105 @@
           "riskScores": {
             "Fire": 0.2,
             "Theft": 0.15
+          }
+        }
+      ]
+    },
+    {
+      "id": "q-coast-distance",
+      "text": "How far is the property from the coast?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "under-1",
+          "label": "Under 1 mile",
+          "riskScores": {
+            "Natural": 0.4
+          }
+        },
+        {
+          "id": "1-5",
+          "label": "1 - 5 miles",
+          "riskScores": {
+            "Natural": 0.2
+          }
+        },
+        {
+          "id": "over-5",
+          "label": "Over 5 miles",
+          "riskScores": {
+            "Natural": -0.1
+          }
+        }
+      ]
+    },
+    {
+      "id": "q-solar-panels",
+      "text": "Does the property have solar panels?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes",
+          "riskScores": {
+            "Fire": 0.05,
+            "Natural": 0.05
+          }
+        },
+        {
+          "id": "no",
+          "label": "No"
+        }
+      ]
+    },
+    {
+      "id": "q-smoke-detectors",
+      "text": "Do you have functioning smoke detectors in every room?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes",
+          "riskScores": {
+            "Fire": -0.2
+          }
+        },
+        {
+          "id": "no",
+          "label": "No",
+          "riskScores": {
+            "Fire": 0.1
+          }
+        }
+      ]
+    },
+    {
+      "id": "q-prior-claims",
+      "text": "Have you had any insurance claims in the last 5 years?",
+      "type": "single-choice",
+      "options": [
+        {
+          "id": "none",
+          "label": "No prior claims",
+          "riskScores": {
+            "Fire": -0.05,
+            "Theft": -0.05,
+            "Legal": -0.05,
+            "Natural": -0.05
+          }
+        },
+        {
+          "id": "1",
+          "label": "1 claim"
+        },
+        {
+          "id": "2-plus",
+          "label": "2 or more claims",
+          "riskScores": {
+            "Fire": 0.1,
+            "Theft": 0.1,
+            "Legal": 0.1,
+            "Natural": 0.1
           }
         }
       ]
