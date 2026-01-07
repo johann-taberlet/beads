@@ -20,10 +20,12 @@ export type LogicOperator =
   | "gt"
   | "lt";
 
+export type AnswerValue = string | number | boolean | string[];
+
 export interface BasicCondition {
   questionId: string;
   operator: LogicOperator;
-  value: string | number | boolean | string[];
+  value: AnswerValue;
 }
 
 export interface LogicCondition {
@@ -49,3 +51,16 @@ export interface QuizSchema {
   version: string;
   questions: Question[];
 }
+
+export interface QuizState {
+  currentStep: number;
+  answers: Record<string, AnswerValue>;
+}
+
+export interface QuizStore extends QuizState {
+  setAnswer: (questionId: string, answer: AnswerValue) => void;
+  nextStep: () => void;
+  previousStep: () => void;
+  reset: () => void;
+}
+

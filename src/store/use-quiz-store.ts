@@ -1,21 +1,10 @@
 import { create } from "zustand";
+import type { QuizStore, AnswerValue } from "@/types/quiz";
 
-interface QuizState {
-  currentStep: number;
-  answers: Record<string, string | number | boolean | string[]>;
-  setAnswer: (
-    questionId: string,
-    answer: string | number | boolean | string[],
-  ) => void;
-  nextStep: () => void;
-  previousStep: () => void;
-  reset: () => void;
-}
-
-export const useQuizStore = create<QuizState>((set) => ({
+export const useQuizStore = create<QuizStore>((set) => ({
   currentStep: 0,
   answers: {},
-  setAnswer: (questionId, answer) =>
+  setAnswer: (questionId: string, answer: AnswerValue) =>
     set((state) => ({
       answers: { ...state.answers, [questionId]: answer },
     })),
@@ -24,3 +13,4 @@ export const useQuizStore = create<QuizState>((set) => ({
     set((state) => ({ currentStep: Math.max(0, state.currentStep - 1) })),
   reset: () => set({ currentStep: 0, answers: {} }),
 }));
+
