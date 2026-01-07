@@ -4,14 +4,25 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { LeadForm } from "@/components/quiz/lead-form";
 import { QuestionComponent } from "@/components/quiz/question";
+import { useFormEngine } from "@/hooks/use-form-engine";
 import quizData from "@/schemas/quiz.json";
 import { useQuizStore } from "@/store/use-quiz-store";
 import type { QuizSchema } from "@/types/quiz";
 
 export default function AssessmentPage() {
-  const { currentStep, lead, answers, setAnswer, nextStep, previousStep } =
-    useQuizStore();
   const quiz = quizData as QuizSchema;
+  const { lead } = useQuizStore();
+  const {
+    currentQuestion,
+    currentVisibleIndex,
+    progress,
+    currentAnswer,
+    setAnswer,
+    goNext,
+    goBack,
+    canProceed,
+    canGoBack,
+  } = useFormEngine(quiz);
 
   // We only show LeadForm if lead is null
   if (!lead) {
@@ -48,9 +59,6 @@ export default function AssessmentPage() {
       </div>
     );
   }
-
-  const currentQuestion = quiz.questions[currentStep];
-  const progress = Math.round((currentStep / quiz.questions.length) * 100);
 
   return (
     <div className="relative min-h-screen bg-background flex flex-col items-center selection:bg-primary selection:text-primary-foreground overflow-hidden">
@@ -99,32 +107,30 @@ export default function AssessmentPage() {
             >
               <div className="mb-8 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[10px] font-black text-primary">
-                  {currentStep + 1}
+                  {currentVisibleIndex}
                 </div>
                 <div className="h-px flex-1 bg-linear-to-r from-border/50 to-transparent" />
               </div>
 
               <QuestionComponent
                 question={currentQuestion}
-                value={answers[currentQuestion.id]}
+                value={currentAnswer}
                 onChange={(val) => setAnswer(currentQuestion.id, val)}
               />
 
               <div className="mt-16 flex items-center justify-between gap-4">
                 <button
                   type="button"
-                  onClick={previousStep}
-                  className="h-14 px-8 rounded-2xl border border-border/50 text-[10px] font-black tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all active:scale-95"
+                  onClick={goBack}
+                  disabled={!canGoBack}
+                  className="h-14 px-8 rounded-2xl border border-border/50 text-[10px] font-black tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
                 >
                   Back
                 </button>
                 <button
                   type="button"
-                  onClick={nextStep}
-                  disabled={
-                    answers[currentQuestion.id] === undefined &&
-                    currentQuestion.type !== "text"
-                  }
+                  onClick={goNext}
+                  disabled={!canProceed}
                   className="h-14 flex-1 rounded-2xl bg-primary text-primary-foreground font-black tracking-[0.2em] uppercase shadow-premium hover:shadow-premium-lg hover:-translate-y-0.5 transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none group"
                 >
                   <span className="flex items-center justify-center gap-2">
