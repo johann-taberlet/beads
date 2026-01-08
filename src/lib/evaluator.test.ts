@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import type { AnswerValue, Condition } from "../types/quiz";
-import { evaluateCondition } from "./evaluator";
+import type { AnswerValue, Condition, QuizSchema } from "../types/quiz";
+import { calculateRiskScores, evaluateCondition } from "./evaluator";
 
 describe("evaluateCondition", () => {
   const answers: Record<string, AnswerValue> = {
@@ -143,5 +143,80 @@ describe("evaluateCondition", () => {
       };
       expect(evaluateCondition(conditionNotEquals, answers)).toBe(true);
     });
+  });
+});
+
+describe("calculateRiskScores", () => {
+  const schema: QuizSchema = {
+    id: "test-quiz",
+    title: "Test Quiz",
+    version: "1.0.0",
+    questions: [
+      {
+        id: "q1",
+        text: "Question 1",
+        type: "single-choice",
+        options: [
+          {
+            id: "opt1",
+            label: "Option 1",
+            riskScores: { Fire: 0.1, Theft: 0.2 },
+          },
+          { id: "opt2", label: "Option 2", riskScores: { Fire: -0.05 } },
+        ],
+      },
+      {
+        id: "q2",
+        text: "Question 2",
+        type: "multi-select",
+        options: [
+          { id: "m1", label: "Multi 1", riskScores: { Legal: 0.3 } },
+          {
+            id: "m2",
+            label: "Multi 2",
+            riskScores: { Legal: 0.1, Fire: 0.05 },
+          },
+        ],
+      },
+    ],
+  };
+
+  it("should aggregate scores for single-choice", () => {
+    const answers: Record<string, AnswerValue> = { q1: "opt1" };
+    const scores = calculateRiskScores(schema, answers);
+    expect(scores).toEqual({ Fire: 0.1, Theft: 0.2 });
+  });
+
+  it("should aggregate scores for multi-select", () => {
+    const answers: Record<string, AnswerValue> = { q2: ["m1", "m2"] };
+    const scores = calculateRiskScores(schema, answers);
+    expect(scores).toEqual({ Legal: 0.4, Fire: 0.05 });
+  });
+
+  it("should aggregate scores from multiple questions", () => {
+    const answers: Record<string, AnswerValue> = {
+      q1: "opt1",
+      q2: ["m1"],
+    };
+    const scores = calculateRiskScores(schema, answers);
+    expect(scores).toEqual({ Fire: 0.1, Theft: 0.2, Legal: 0.3 });
+  });
+
+  it("should handle negative scores and subtotals", () => {
+    const answers: Record<string, AnswerValue> = {
+      q1: "opt2",
+      q2: ["m2"],
+    };
+    const scores = calculateRiskScores(schema, answers);
+    // q1 opt2: Fire: -0.05
+    // q2 m2: Legal: 0.1, Fire: 0.05
+    // Total Fire: 0, Legal: 0.1
+    expect(scores.Fire).toBeCloseTo(0);
+    expect(scores.Legal).toBe(0.1);
+  });
+
+  it("should return empty object if no answers", () => {
+    const scores = calculateRiskScores(schema, {});
+    expect(scores).toEqual({});
   });
 });

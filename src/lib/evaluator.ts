@@ -3,6 +3,8 @@ import type {
   BasicCondition,
   Condition,
   LogicCondition,
+  QuizSchema,
+  RiskScores,
 } from "../types/quiz";
 
 /**
@@ -72,4 +74,47 @@ export function evaluateCondition(
     default:
       return false;
   }
+}
+
+/**
+ * Calculates aggregated risk scores based on user answers and quiz schema.
+ *
+ * @param schema The quiz schema containing questions and options with risk weights
+ * @param answers The user's provided answers
+ * @returns Aggregated RiskScores
+ */
+export function calculateRiskScores(
+  schema: QuizSchema,
+  answers: Record<string, AnswerValue>,
+): RiskScores {
+  const totals: RiskScores = {};
+
+  schema.questions.forEach((question) => {
+    const answer = answers[question.id];
+    if (answer === undefined || !question.options) return;
+
+    const addScores = (scores: RiskScores) => {
+      Object.entries(scores).forEach(([category, value]) => {
+        totals[category] = (totals[category] || 0) + value;
+      });
+    };
+
+    if (question.type === "single-choice") {
+      const selectedOption = question.options.find((opt) => opt.id === answer);
+      if (selectedOption?.riskScores) {
+        addScores(selectedOption.riskScores);
+      }
+    } else if (question.type === "multi-select" && Array.isArray(answer)) {
+      answer.forEach((answerId) => {
+        const selectedOption = question.options?.find(
+          (opt) => opt.id === answerId,
+        );
+        if (selectedOption?.riskScores) {
+          addScores(selectedOption.riskScores);
+        }
+      });
+    }
+  });
+
+  return totals;
 }
